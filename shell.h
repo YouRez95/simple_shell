@@ -10,4 +10,14 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#endif
+extern char **environ;
+
+typedef struct Node
+{
+	char *data;
+	struct Node *next;
+} av;
+
+char **getcommands(char *buffer, size_t bufsize, char *token, char **argv);
+
+#endif /* SHELL_H */
