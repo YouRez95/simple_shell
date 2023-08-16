@@ -5,22 +5,35 @@
  *
  * Return: Always 0.
  */
+
+char **avs = NULL;
+
+void sigint_free(int sig)
+{
+	int i = 0;
+
+	while (avs[i] != NULL)
+	{
+		free(avs[i]);
+		i++;
+	}
+	free(avs);
+	exit(EXIT_SUCCESS);
+}
+
 int main(void)
 {
-	char		*buffer, *token, **av, pathname[25];
-	size_t		bufsize;
+	char		pathname[25];
 	pid_t		cpr;
-	int			status;
+	int		status;
 
+	signal(SIGINT, sigint_free);
 	do {
 		if (isatty(STDIN_FILENO))
 			printf("$ ");
 
-		buffer = NULL;
-		bufsize = 0;
-		token = NULL;
-		av = getcommands(buffer, bufsize, token, av);
-		if  (av == NULL)
+		avs = getcommands(avs);
+		if  (avs == NULL)
 			exit(EXIT_FAILURE);
 
 		cpr = fork();
@@ -29,10 +42,10 @@ int main(void)
 
 		if (cpr == 0)
 		{
-			if (execve(av[0], av, environ) == -1)
+			if (execve(avs[0], avs, environ) == -1)
 			{
-				strcat(strcpy(pathname, "/bin/"), av[0]);
-				if (execve(pathname, av, environ) == -1)
+				strcat(strcpy(pathname, "/bin/"), avs[0]);
+				if (execve(pathname, avs, environ) == -1)
 				{
 					perror("./simple_shell");
 					exit(EXIT_FAILURE);
@@ -47,8 +60,6 @@ int main(void)
 		pathname[5] = 0;
 
 	} while (1);
-
-	free(buffer);
 
 	return (0);
 }

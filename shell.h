@@ -11,6 +11,7 @@
 #include <fcntl.h>
 
 extern char **environ;
+extern char **avs;
 
 typedef struct Node
 {
@@ -18,6 +19,7 @@ typedef struct Node
 	struct Node *next;
 } av;
 
-char **getcommands(char *buffer, size_t bufsize, char *token, char **argv);
+char **getcommands(char **argv);
+
 
 #endif /* SHELL_H */

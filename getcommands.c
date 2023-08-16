@@ -13,11 +13,16 @@ void free_av(av *head);
  * Return: a pointer to @argv in success,
  *	Null, otherwise.
 */
-char **getcommands(char *buffer, size_t bufsize, char *token, char **argv)
+char **getcommands(char **argv)
 {
+	size_t bufsize;
+	char *buffer, *token;
 	av *head, *ptr;
 	int i, listlen;
 
+	buffer = NULL;
+	bufsize = 0;
+	token = NULL;
 	if (getline(&buffer, &bufsize, stdin) == -1)
 		return (NULL);
 
