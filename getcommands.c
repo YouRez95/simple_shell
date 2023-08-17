@@ -1,13 +1,10 @@
 #include "shell.h"
 
-av *add_at_end(av **head, char *token);
-void free_av(av *head);
+void add_at_end(av **head, char *token);
+void free_list(av *head);
 
 /**
  * getcommands - convert a command line to an array of strings.
- * @buffer: where to save the command line in,
- * @bufsize: size of the buffer,
- * @token: to store the strings we get from the cmd,
  * @argv: an array to store the strings in.
  *
  * Return: a pointer to @argv in success,
@@ -60,19 +57,18 @@ char **getcommands(char **argv)
 	ptr = head;
 	for (i = 0; i < listlen; i++)
 	{
-		argv[i] = malloc(strlen(ptr->data) * sizeof(char));
-		if (argv == NULL)
+		argv[i] = strdup(ptr->data);
+		if (argv[i] == NULL)
 		{
 			fprintf(stderr, "allocation memory failed\n");
 			return (NULL);
 		}
-		strcpy(argv[i], ptr->data);
 		ptr = ptr->next;
 	}
 
 	argv[i] = NULL;
 
-	free_av(head);
+	free_list(head);
 
 	return (argv);
 }
@@ -82,10 +78,9 @@ char **getcommands(char **argv)
  * @head: a linked list,
  * @str: data to put in the created node.
  *
- * Return: a pointer to created node,
- *	Null, otherwise.
+ * Return: void.
 */
-av *add_at_end(av **head, char *str)
+void add_at_end(av **head, char *str)
 {
 	av *newAv, *ptr;
 
@@ -93,38 +88,30 @@ av *add_at_end(av **head, char *str)
 	if (newAv == NULL)
 	{
 		fprintf(stderr, "Allocation Failed\n");
-		return (NULL);
+		return;
 	}
 
 	newAv->data = strdup(str);
 	newAv->next = NULL;
-
-	if (*head == NULL)
-	{
-		*head = newAv;
-		return (newAv);
-	}
 
 	ptr = *head;
 	while (ptr->next != NULL)
 		ptr = ptr->next;
 
 	ptr->next = newAv;
-
-	return (ptr);
 }
 
 /**
- * free_av - frees a list.
+ * free_list - frees a list.
  * @head: the linked list to be freed,
  *
  * Return: void.
 */
-void free_av(av *head)
+void free_list(av *head)
 {
 	if (head != NULL)
 	{
-		free_av(head->next);
+		free_list(head->next);
 		free(head->data);
 		free(head);
 	}

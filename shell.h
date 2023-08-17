@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -11,8 +12,14 @@
 #include <fcntl.h>
 
 extern char **environ;
-extern char **avs;
 
+/**
+ * struct Node - singly linked list
+ * @data: string - (malloc'ed string)
+ * @next: points to the next node
+ *
+ * Description: singly linked list node structure
+ */
 typedef struct Node
 {
 	char *data;
@@ -20,6 +27,6 @@ typedef struct Node
 } av;
 
 char **getcommands(char **argv);
-
+void free_argv(char **arr);
 
 #endif /* SHELL_H */

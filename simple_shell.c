@@ -1,34 +1,22 @@
 #include "shell.h"
 
+void signal_handler(int i);
+
 /**
  * main - entry point
  *
  * Return: Always 0.
  */
-
-char **avs = NULL;
-
-void sigint_free(int sig)
-{
-	int i = 0;
-
-	while (avs[i] != NULL)
-	{
-		free(avs[i]);
-		i++;
-	}
-	free(avs);
-	exit(EXIT_SUCCESS);
-}
-
 int main(void)
 {
-	char		pathname[25];
+	char		**avs, pathname[25];
+	int			status;
 	pid_t		cpr;
-	int		status;
 
-	signal(SIGINT, sigint_free);
-	do {
+	signal(SIGINT, signal_handler);
+
+	while (1)
+	{
 		if (isatty(STDIN_FILENO))
 			printf("$ ");
 
@@ -51,15 +39,29 @@ int main(void)
 					exit(EXIT_FAILURE);
 				}
 			}
-			else
-				exit(EXIT_SUCCESS);
 		}
 		else
 			wait(&status);
 
+		free_argv(avs);
 		pathname[5] = 0;
-
-	} while (1);
+	}
 
 	return (0);
+}
+
+/**
+ * signal_handler - handle action of signal 2.
+ * @i: param.
+ *
+ * Return: void.
+ */
+void signal_handler(int i)
+{
+	char **avs;
+
+	(void)i;
+	avs = NULL;
+	free_argv(getcommands(avs));
+	exit(EXIT_SUCCESS);
 }
