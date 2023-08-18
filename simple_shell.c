@@ -9,9 +9,14 @@ void signal_handler(int i);
  */
 int main(void)
 {
-	char		**avs, pathname[25];
+	char		**avs =  NULL;
+	char	pathname[25];
 	int			status;
 	pid_t		cpr;
+	char *built_in[]  = {"exit"};
+	unsigned long int i;
+
+	int (*handle_built_in[])(char **) = {handle_exit};
 
 	signal(SIGINT, signal_handler);
 
@@ -24,6 +29,11 @@ int main(void)
 		if  (avs == NULL)
 			exit(EXIT_FAILURE);
 
+		for (i = 0; i < sizeof(built_in) / sizeof(built_in[0]); i++)
+		{
+			if (strcmp(built_in[i], avs[0]) == 0)
+				return (handle_built_in[i](avs));
+		}
 		cpr = fork();
 		if (cpr == -1)
 			exit(EXIT_FAILURE);

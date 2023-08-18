@@ -29,5 +29,5 @@ typedef struct Node
 char **getcommands(char **argv);
 char **splitbuffer(char *buffer);
 void free_argv(char **arr);
-
+int handle_exit(char **arr);
 #endif /* SHELL_H */
