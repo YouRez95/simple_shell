@@ -8,13 +8,10 @@
 */
 void free_argv(char **arr)
 {
-	int a = 0;
+	int a;
 
-	while (arr[a] != NULL)
-	{
+	for (a = 0; arr[a] != NULL; a++)
 		free(arr[a]);
-		a++;
-	}
 
 	free(arr);
 }

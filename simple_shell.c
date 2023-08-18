@@ -36,6 +36,7 @@ int main(void)
 				if (execve(pathname, avs, environ) == -1)
 				{
 					perror("./simple_shell");
+					free_argv(avs);
 					exit(EXIT_FAILURE);
 				}
 			}
