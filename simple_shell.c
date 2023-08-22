@@ -29,33 +29,36 @@ int main(void)
 		if  (avs == NULL)
 			exit(EXIT_FAILURE);
 
-		for (i = 0; i < sizeof(built_in) / sizeof(built_in[0]); i++)
+		if (avs[0])
 		{
-			if (strcmp(built_in[i], avs[0]) == 0)
-				return (handle_built_in[i](avs));
-		}
-		cpr = fork();
-		if (cpr == -1)
-			exit(EXIT_FAILURE);
-
-		if (cpr == 0)
-		{
-			if (execve(avs[0], avs, environ) == -1)
+			for (i = 0; i < sizeof(built_in) / sizeof(built_in[0]); i++)
 			{
-				strcat(strcpy(pathname, "/bin/"), avs[0]);
-				if (execve(pathname, avs, environ) == -1)
+				if (strcmp(built_in[i], avs[0]) == 0)
+					return (handle_built_in[i](avs));
+			}
+			cpr = fork();
+			if (cpr == -1)
+				exit(EXIT_FAILURE);
+
+			if (cpr == 0)
+			{
+				if (execve(avs[0], avs, environ) == -1)
 				{
-					perror("./simple_shell");
-					free_argv(avs);
-					exit(EXIT_FAILURE);
+					strcat(strcpy(pathname, "/bin/"), avs[0]);
+					if (execve(pathname, avs, environ) == -1)
+					{
+						perror("./simple_shell");
+						free_argv(avs);
+						exit(EXIT_FAILURE);
+					}
 				}
 			}
-		}
-		else
-			wait(&status);
+			else
+				wait(&status);
 
-		free_argv(avs);
-		pathname[5] = 0;
+			free_argv(avs);
+			pathname[5] = 0;
+		}
 	}
 
 	return (0);

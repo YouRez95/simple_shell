@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int countdelim(char *str);
+#define MAX_SUBSTRINGS 200
 
 /**
  * splitbuffer - splits the buffer to substrings.
@@ -10,65 +10,42 @@ int countdelim(char *str);
  */
 char **splitbuffer(char *buffer)
 {
-	char **splitter_buffer;
-	int i, j, words;
+	int num_substrings, buffer_len, substring_len, words, i, j;
+	char **splitted_buffer;
 
-	words = countdelim(buffer);
-
-	splitter_buffer = malloc(sizeof(char *) * (words + 1));
-	if (!splitter_buffer)
+	splitted_buffer = malloc(MAX_SUBSTRINGS * sizeof(char *));
+	if (!splitted_buffer)
 		return (NULL);
 
-	i = 0;
-	splitter_buffer[i] = malloc(strlen(buffer) + 1);
-	if (!splitter_buffer[i])
-		return (NULL);
-
-	j = 0;
-	while (*buffer)
+	buffer_len = strlen(buffer);
+	num_substrings = 0;
+	words = 0;
+	for (i = 0; i <= buffer_len; i++)
 	{
-		if (*buffer == ' ')
+		if (buffer[i] == ' ' || buffer[i] == '\0')
 		{
-			splitter_buffer[i][j] = '\0';
-			i += 1;
-			splitter_buffer[i] = malloc(strlen(buffer) + 1);
-			if (!splitter_buffer[i])
-				return (NULL);
-			j = 0;
+			substring_len = i - words;
+			if (substring_len > 0)
+			{
+				splitted_buffer[num_substrings] = malloc(substring_len + 1);
+				if (!splitted_buffer[num_substrings])
+				{
+					for (j = 0; j < num_substrings; j++)
+						free(splitted_buffer[j]);
+
+					free(splitted_buffer);
+					num_substrings = -1;
+					return (NULL);
+				}
+				strncpy(splitted_buffer[num_substrings], buffer + words, substring_len);
+				splitted_buffer[num_substrings][substring_len] = '\0';
+				num_substrings++;
+			}
+			words = i + 1;
 		}
-		else
-		{
-			splitter_buffer[i][j] = *buffer;
-			j++;
-		}
-		buffer++;
 	}
 
-	splitter_buffer[i][j] = '\0';
-	splitter_buffer[i + 1] = NULL;
+	splitted_buffer[num_substrings] = NULL;
 
-	return (splitter_buffer);
-}
-
-/**
- * countdelim - returns the number of words a string contains.
- * @str: the string.
- *
- * Return: int (number of words).
- */
-int countdelim(char *str)
-{
-	int count;
-	char *c;
-
-	c = str;
-	count = 1;
-	while (*c)
-	{
-		if (*c == ' ')
-			count += 1;
-		c++;
-	}
-
-	return (count);
+	return (splitted_buffer);
 }
