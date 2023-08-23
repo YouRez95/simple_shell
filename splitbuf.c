@@ -1,5 +1,7 @@
 #include "shell.h"
 
+int _strlen(char *s);
+char *_strncpy(char *dest, char *src, int n);
 #define MAX_SUBSTRINGS 200
 
 /**
@@ -17,7 +19,7 @@ char **splitbuffer(char *buffer)
 	if (!splitted_buffer)
 		return (NULL);
 
-	buffer_len = strlen(buffer);
+	buffer_len = _strlen(buffer);
 	num_substrings = 0;
 	words = 0;
 	for (i = 0; i <= buffer_len; i++)
@@ -37,7 +39,7 @@ char **splitbuffer(char *buffer)
 					num_substrings = -1;
 					return (NULL);
 				}
-				strncpy(splitted_buffer[num_substrings], buffer + words, substring_len);
+				_strncpy(splitted_buffer[num_substrings], buffer + words, substring_len);
 				splitted_buffer[num_substrings][substring_len] = '\0';
 				num_substrings++;
 			}
@@ -48,4 +50,57 @@ char **splitbuffer(char *buffer)
 	splitted_buffer[num_substrings] = NULL;
 
 	return (splitted_buffer);
+}
+
+/**
+ * _strlen - Returns the length of a string.
+ * @s: The string to check
+ *
+ * Return: void
+ */
+int _strlen(char *s)
+{
+	int i, len = 0;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		len++;
+		i++;
+	}
+
+	return (len);
+}
+
+/**
+ * _strncpy - Copies a string.
+ * @src: The source sting
+ * @dest: The destination
+ * @n: The number of bytes (characters)
+ *
+ * Return: The pointer to the resulting string dest.
+ */
+char *_strncpy(char *dest, char *src, int n)
+{
+	int i, srclen = 0;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		srclen++;
+		i++;
+	}
+
+	i = 0;
+	while (i < n)
+	{
+		if (i > srclen)
+			dest[i] = 0x00;
+		else
+			dest[i] = src[i];
+
+		i++;
+	}
+
+	return (dest);
 }
