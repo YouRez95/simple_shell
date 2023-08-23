@@ -40,7 +40,12 @@ int main(int ac, char **av)
 			for (i = 0; i < sizeof(built_in) / sizeof(built_in[0]); i++)
 			{
 				if (_strcmp(built_in[i], avs[0]) == 0)
-					return (handle_built_in[i](avs));
+				{
+					if (WEXITSTATUS(status) == 2)
+						exit(2);
+
+					exit(handle_built_in[i](avs));
+				}
 			}
 			cpr = fork();
 			if (cpr == -1)
