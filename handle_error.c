@@ -3,7 +3,7 @@
 /**
  * handle_error - prints error message.
  * @av0: args victore [0],
- * @avs[0]: first element of the command line.
+ * @avs0: first element of the command line.
  *
  * Return: void.
 */

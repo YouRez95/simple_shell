@@ -41,9 +41,6 @@ int main(int ac, char **av)
 			{
 				if (_strcmp(built_in[i], avs[0]) == 0)
 				{
-					if (WEXITSTATUS(status) == 2)
-						exit(2);
-
 					exit(handle_built_in[i](avs));
 				}
 			}
