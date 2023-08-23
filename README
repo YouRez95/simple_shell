@@ -1,0 +1,35 @@
+# Simple Shell Project
+
+## Description
+This project is a simple Unix shell implementation developed in C. The goal of this project is to apply everything we've learned in C programming so far, and provide a basic command-line interface to interact with the underlying operating system. The shell supports various standard shell features, including executing commands, managing processes, and basic input/output redirection.
+
+## Features
+        Command execution
+        Process management (foreground and background)
+        Basic input/output redirection
+        Signal handling (e.g., Ctrl+C)
+        Simple command parsing
+
+## Getting Started
+
+### Compilation
+To compile the Simple Shell, follow these steps:
+
+Clone the repository:
+`git clone https://github.com/your-username/simple-shell.git`
+
+Navigate to the project directory:
+`cd simple-shell`
+
+Compile the shell source code:
+`gcc -Wall -Werror -Wextra -pedantic *.c -o hsh`
+
+### Usage
+
+Run the shell:
+`./hsh`
+
+You'll see the shell prompt:
+`$`
+
+### Enter commands and interact with the shell.
