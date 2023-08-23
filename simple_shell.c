@@ -2,15 +2,16 @@
 
 void signal_handler(int i);
 int _strcmp(char *s1, char *s2);
-char *_strcat(char *dest, char *src);
 char *_strcpy(char *dest, char *src);
 
 /**
  * main - entry point
+ * @ac: args counter,
+ * @av: args victor.
  *
  * Return: Always 0.
  */
-int main(void)
+int main(int ac, char **av)
 {
 	char		**avs =  NULL;
 	char	pathname[25];
@@ -20,6 +21,8 @@ int main(void)
 	unsigned long int i;
 
 	int (*handle_built_in[])(char **) = {handle_exit};
+
+	(void)ac;
 
 	signal(SIGINT, signal_handler);
 
@@ -50,20 +53,22 @@ int main(void)
 					_strcat(_strcpy(pathname, "/bin/"), avs[0]);
 					if (execve(pathname, avs, environ) == -1)
 					{
-						perror("./simple_shell");
+						handle_error(av[0], avs[0]);
 						free_argv(avs);
-						exit(EXIT_FAILURE);
+						exit(127);
 					}
 				}
 			}
 			else
 				wait(&status);
 
-			free_argv(avs);
 			pathname[5] = 0;
 		}
+		free_argv(avs);
+		if (!isatty(STDIN_FILENO) && WEXITSTATUS(status) == 127)
+			exit(127);
 	}
-
+	printf("# here\n");
 	return (0);
 }
 
@@ -99,43 +104,6 @@ int _strcmp(char *s1, char *s2)
 	}
 
 	return (*s1 - *s2);
-}
-
-/**
- * _strcat - Concatenates two strings.
- * @src: The source sting
- * @dest: The destination
- *
- * Return: The pointer to the resulting string dest.
- */
-char *_strcat(char *dest, char *src)
-{
-	int i, j, k, destlen = 0, strlen = 0;
-
-	i = 0;
-	while (src[i] != '\0')
-	{
-		strlen++;
-		i++;
-	}
-
-	i = 0;
-	while (dest[i] != '\0')
-	{
-		destlen++;
-		i++;
-	}
-
-	j = i + strlen;
-	k = 0;
-	while (i <= j)
-	{
-		dest[i] = src[k];
-		i++;
-		k++;
-	}
-
-	return (dest);
 }
 
 /**

@@ -1,6 +1,5 @@
 #include "shell.h"
 
-int _strlen(char *s);
 char *_strncpy(char *dest, char *src, int n);
 #define MAX_SUBSTRINGS 200
 
@@ -50,26 +49,6 @@ char **splitbuffer(char *buffer)
 	splitted_buffer[num_substrings] = NULL;
 
 	return (splitted_buffer);
-}
-
-/**
- * _strlen - Returns the length of a string.
- * @s: The string to check
- *
- * Return: void
- */
-int _strlen(char *s)
-{
-	int i, len = 0;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		len++;
-		i++;
-	}
-
-	return (len);
 }
 
 /**
