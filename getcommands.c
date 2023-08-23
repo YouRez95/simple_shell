@@ -18,7 +18,7 @@ char **getcommands(char **argv)
 	if (getline(&buffer, &bufsize, stdin) == -1)
 	{
 		free(buffer);
-		return (NULL);
+		exit(0);
 	}
 
 	i = 0;
