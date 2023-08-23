@@ -26,7 +26,7 @@ int main(void)
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			printf("$ ");
+			write(STDIN_FILENO, "$ ", 2);
 
 		avs = getcommands(avs);
 		if  (avs == NULL)
