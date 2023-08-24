@@ -17,8 +17,10 @@ int handle_exit(char **avs)
 	if (avs[1])
 	{
 		status = _atoi(avs[1]);
+		free_argv(avs);
 		return (status);
 	}
+	free_argv(avs);
 	return (0);
 }
 
@@ -46,7 +48,7 @@ int _atoi(char *s)
 			result = result * 10 + (s[i] - '0');
 
 		if (s[i] < '0' || s[i] > '9')
-			return (2);
+			return (255);
 	}
 
 	return (result * sign);

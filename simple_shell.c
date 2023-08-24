@@ -18,7 +18,7 @@ int main(int ac, char **av)
 	int			status;
 	pid_t		cpr;
 	char *built_in[]  = {"exit"};
-	unsigned long int i, exit_st;
+	unsigned long int i;
 
 	int (*handle_built_in[])(char **) = {handle_exit};
 
@@ -41,17 +41,7 @@ int main(int ac, char **av)
 			{
 				if (_strcmp(built_in[i], avs[0]) == 0)
 				{
-					if (WEXITSTATUS(status) == 2)
-						exit(2);
-					exit_st = handle_built_in[i](avs);
-					if (exit_st != 2)
-					{
-						free_argv(avs);
-						exit(exit_st);
-					}
-					handle_error(av[0], avs);
-					free_argv(avs);
-					exit(2);
+					exit(handle_built_in[i](avs));
 				}
 			}
 			cpr = fork();
@@ -65,7 +55,7 @@ int main(int ac, char **av)
 					_strcat(_strcpy(pathname, "/bin/"), avs[0]);
 					if (execve(pathname, avs, environ) == -1)
 					{
-						handle_error(av[0], avs);
+						handle_error(av[0], avs[0]);
 						free_argv(avs);
 						exit(127);
 					}
@@ -98,6 +88,24 @@ void signal_handler(int i)
 	avs = NULL;
 	free_argv(getcommands(avs));
 	exit(EXIT_SUCCESS);
+}
+
+/**
+ * _strcmp - Compares two strings.
+ * @s1: String 1
+ * @s2: String 2
+ *
+ * Return: The pointer to the resulting string dest.
+ */
+int _strcmp(char *s1, char *s2)
+{
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+
+	return (*s1 - *s2);
 }
 
 /**
