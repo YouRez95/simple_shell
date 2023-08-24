@@ -29,8 +29,9 @@ char **getcommands(char **argv);
 char **splitbuffer(char *buffer);
 void free_argv(char **arr);
 int handle_exit(char **arr);
-void handle_error(char *av0, char *avs0);
+void handle_error(char *av0, char **avs);
 char *_strcat(char *dest, char *src);
+int _strcmp(char *s1, char *s2);
 int _strlen(char *s);
 
 #endif /* SHELL_H */
