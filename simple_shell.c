@@ -17,10 +17,11 @@ int main(int ac, char **av)
 	char	pathname[25];
 	int			status;
 	pid_t		cpr;
-	char *built_in[]  = {"exit"};
+	char *built_in[]  = {"exit", "cd"};
 	unsigned long int i;
+	int statCd;
 
-	int (*handle_built_in[])(char **) = {handle_exit};
+	int (*handle_built_in[])(char **) = {handle_exit, handle_cd};
 
 	(void)ac;
 
@@ -28,6 +29,7 @@ int main(int ac, char **av)
 
 	while (1)
 	{
+		statCd = 0;
 		if (isatty(STDIN_FILENO))
 			write(STDIN_FILENO, "$ ", 2);
 
@@ -39,17 +41,27 @@ int main(int ac, char **av)
 		{
 			for (i = 0; i < sizeof(built_in) / sizeof(built_in[0]); i++)
 			{
+
 				if (_strcmp(built_in[i], avs[0]) == 0)
 				{
-					exit(handle_built_in[i](avs));
+					if (_strcmp(avs[0], "cd") == 0)
+					{
+						handle_built_in[i](avs);
+						statCd = 1;
+						break;
+					}
+					exit((handle_built_in[i])(avs));
 				}
 			}
+			if (statCd == 1)
+				continue;
 			cpr = fork();
 			if (cpr == -1)
 				exit(EXIT_FAILURE);
 
 			if (cpr == 0)
 			{
+
 				if (execve(avs[0], avs, environ) == -1)
 				{
 					_strcat(_strcpy(pathname, "/bin/"), avs[0]);
@@ -88,24 +100,6 @@ void signal_handler(int i)
 	avs = NULL;
 	free_argv(getcommands(avs));
 	exit(EXIT_SUCCESS);
-}
-
-/**
- * _strcmp - Compares two strings.
- * @s1: String 1
- * @s2: String 2
- *
- * Return: The pointer to the resulting string dest.
- */
-int _strcmp(char *s1, char *s2)
-{
-	while (*s1 && *s2 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-
-	return (*s1 - *s2);
 }
 
 /**
